@@ -1,0 +1,96 @@
+type User{
+    _id:ID
+    username:String!
+    email:String!
+    password:String!
+    avatar:String
+    joinDate:String
+    followers:followers
+    following:following
+}
+type following{
+    Following:Int
+    peopleFollowing:[User]
+}
+type followers{
+    Followers:Int
+    peopleFollowers:[User]
+}
+ scalar ObjectId
+
+type Notification{
+    _id:ID!
+    timestamp:String
+    userId:String!
+    message:String!
+    read:Boolean
+    icon:String!
+    avatar:String!
+}
+
+type Post{
+    _id:ID!
+    message:String!
+    createdBy:User!
+    likes:Likes
+    comments:[Comment]
+    createdDate:String
+}
+type Likes{
+    Likes:Int
+    likedBy:[User]
+}
+type Chat{
+    _id:ID
+    user1:User
+    user2:User
+    messages:[Comment]
+}
+input MessageInput{
+    text:String
+    username:String
+}
+
+type Message{
+    text:String
+    createdBy:String
+}
+
+type Comment{
+    _id: ID!
+    messageBody: String!
+    messageDate: String!
+    messageUser: User!
+}
+
+type Mutation{
+    addComment(postId:ID!,userId:ID!,message:String!):Comment!
+    follow(userId:ID!,usertoFollowId:ID!):[User]!
+    like(postId:ID!,userId:ID!):Post!
+    createMessage(messageInput: MessageInput):Message!
+    createUser(username: String!,email: String!,password:String!):Token
+    signinUser(username: String!,password:String!):Token
+    addPost(message:String!,userId:ID!):Post!
+    deletePost(postId:ID!,userId:ID!):String
+}
+
+type Query{
+    searchPosts(searchTerm:String):[Post]
+    getPostsByUser(userId:ID!):[Post]
+    getNotifications(userId:String!):[Notification]
+    getPosts:[Post]
+    getCurrentUser: User
+    message(id:ID!):Message
+    get_users_to_chat(userId:ID!):[User]
+    get_chats(userId:ID!):[Chat]
+}
+
+type Subscription{
+    messageCreated:Message
+    user_Connected: User
+}
+
+#Typedef del token
+type Token{
+    token:String!
+}
